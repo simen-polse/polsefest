@@ -20,6 +20,7 @@
         }
 
         input[type="email"],
+        input[type="password"],
         input[type="text"],
         select {
             width: 100%;
@@ -51,7 +52,12 @@
         <input type="email" id="email" placeholder="din@epost.no">
     </label>
 
-    <button onclick="sendLogin()">Send innloggingslenke</button>
+    <label>
+        Passord
+        <input type="password" id="password" placeholder="Passord">
+    </label>
+
+    <button onclick="loggInn()">Logg inn</button>
 
     <p id="loginStatus"></p>
 </div>
@@ -99,40 +105,46 @@ const SUPABASE_URL =
     "https://ntwzzmnmbouclsoximwq.supabase.co";
 
 const SUPABASE_KEY =
-    "sb_publishable_UZlebM4VdEBacdWpJAcbBg_6gb6vm2l";
+    "LIM_INN_SUPABASE_KEY";
 
 const supabaseClient =
     supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-async function sendLogin() {
-    const loginStatus = document.getElementById("loginStatus");
+async function loggInn() {
+    const loginStatus =
+        document.getElementById("loginStatus");
 
-    loginStatus.innerText = "Sender innloggingslenke...";
+    loginStatus.innerText =
+        "Logger inn...";
 
     const email =
         document.getElementById("email").value.trim();
 
-    if (!email) {
-        loginStatus.innerText = "Skriv inn e-post først.";
+    const password =
+        document.getElementById("password").value;
+
+    if (!email || !password) {
+        loginStatus.innerText =
+            "Skriv inn både e-post og passord.";
         return;
     }
 
-    const { error } = await supabaseClient.auth.signInWithOtp({
-        email: email,
-        options: {
-            emailRedirectTo: "https://erdetpolsefest.no/tur-retur.html"
-        }
-    });
+    const { error } =
+        await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
 
     if (error) {
-        console.error(error);
         loginStatus.innerText =
-            "Klarte ikke å sende innloggingslenke: " + error.message;
+            "Klarte ikke å logge inn: " + error.message;
         return;
     }
 
     loginStatus.innerText =
-        "Sjekk e-posten din for innloggingslenke.";
+        "Innlogget.";
+
+    await sjekkInnlogging();
 }
 
 async function sjekkInnlogging() {
@@ -171,7 +183,7 @@ async function lastInn() {
 
     if (error) {
         document.getElementById("status").innerText =
-            "Klarte ikke å hente status.";
+            "Klarte ikke å hente status: " + error.message;
         return;
     }
 
@@ -182,11 +194,17 @@ async function lastInn() {
         ["Narvesen", "7-Eleven", "Deli de Luca"];
 
     if (kjenteSteder.includes(data.sted)) {
-        document.getElementById("stedVelger").value = data.sted;
-        document.getElementById("annetSted").value = "";
+        document.getElementById("stedVelger").value =
+            data.sted;
+
+        document.getElementById("annetSted").value =
+            "";
     } else {
-        document.getElementById("stedVelger").value = "Annet";
-        document.getElementById("annetSted").value = data.sted || "";
+        document.getElementById("stedVelger").value =
+            "Annet";
+
+        document.getElementById("annetSted").value =
+            data.sted || "";
     }
 
     visAnnetFelt();
@@ -225,7 +243,9 @@ async function lagre() {
         .eq("id", 1);
 
     document.getElementById("status").innerText =
-        error ? "Feil ved lagring." : "Lagret!";
+        error
+            ? "Feil ved lagring: " + error.message
+            : "Lagret!";
 }
 
 sjekkInnlogging();
