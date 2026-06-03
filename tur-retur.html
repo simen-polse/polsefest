@@ -105,20 +105,35 @@ const supabaseClient =
     supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function sendLogin() {
+    const loginStatus = document.getElementById("loginStatus");
+
+    loginStatus.innerText = "Sender innloggingslenke...";
+
     const email =
-        document.getElementById("email").value;
+        document.getElementById("email").value.trim();
+
+    if (!email) {
+        loginStatus.innerText = "Skriv inn e-post først.";
+        return;
+    }
 
     const { error } = await supabaseClient.auth.signInWithOtp({
         email: email,
         options: {
-            emailRedirectTo: window.location.href
+            emailRedirectTo: "https://erdetpolsefest.no/tur-retur.html"
         }
     });
 
-    document.getElementById("loginStatus").innerText =
-    error
-        ? "Klarte ikke å sende innloggingslenke: " + error.message
-        : "Sjekk e-posten din for innloggingslenke.";
+    if (error) {
+        console.error(error);
+        loginStatus.innerText =
+            "Klarte ikke å sende innloggingslenke: " + error.message;
+        return;
+    }
+
+    loginStatus.innerText =
+        "Sjekk e-posten din for innloggingslenke.";
+}
 
 async function sjekkInnlogging() {
     const { data } =
