@@ -42,11 +42,11 @@ p {
 }
 #oppdatert {
     position: fixed;
-    bottom: 30px;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
 
-    font-size: 0.55em;
+    font-size: 0.70em;
     opacity: 0.55;
 
     white-space: nowrap;
