@@ -1,24 +1,45 @@
-const status = {
-    polsefest: true,
-    sted: "Narvesen",
-    pris: "35"
-};
+const SUPABASE_URL = "https://ntwzzmnmbouclsoximwq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_UZlebM4VdEBacdWpJAcbBg_6gb6vm2l";
 
-if (status.polsefest) {
-    document.body.className = "gronn";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    document.getElementById("status").innerText =
-    "JA";
+async function hentStatus() {
+    const { data, error } = await supabaseClient
+        .from("status")
+        .select("*")
+        .limit(1)
+        .single();
 
-document.getElementById("info").innerText =
-    `På ${status.sted}. ${status.pris} kr per pølse.`;
+    if (error) {
+        console.error("Klarte ikke å hente status:", error);
+
+        document.body.className = "rod";
+        document.getElementById("status").innerText = "NEI";
+        document.getElementById("info").innerText =
+            "Klarte ikke å sjekke pølsestatus akkurat nå.";
+
+        return;
+    }
+
+    visStatus(data);
 }
-else {
-    document.body.className = "rod";
 
-    document.getElementById("status").innerText =
-        "NEI";
+function visStatus(status) {
+    if (status.polsefest) {
+        document.body.className = "gronn";
 
-    document.getElementById("info").innerText =
-        "Dessverre, ingen pølsefest akkurat nå.";
+        document.getElementById("status").innerText = "JA";
+
+        document.getElementById("info").innerText =
+            `På ${status.sted}. ${status.pris} kr per pølse.`;
+    } else {
+        document.body.className = "rod";
+
+        document.getElementById("status").innerText = "NEI";
+
+        document.getElementById("info").innerText =
+            status.melding || "Dessverre, ingen pølsefest akkurat nå.";
+    }
 }
+
+hentStatus();
