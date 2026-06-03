@@ -40,6 +40,22 @@ function visStatus(status) {
         document.getElementById("info").innerText =
             status.melding || "Dessverre, ingen pølsefest akkurat nå.";
     }
+    if (status.oppdatert) {
+
+    const dato = new Date(status.oppdatert);
+
+    const formatert =
+        dato.toLocaleString("nb-NO", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+
+    document.getElementById("oppdatert").innerText =
+        `Pølsestatus sist bekreftet ${formatert}`;
+}
 }
 
 hentStatus();
