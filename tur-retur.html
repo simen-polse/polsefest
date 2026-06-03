@@ -19,6 +19,7 @@
             margin-top: 15px;
         }
 
+        input[type="email"],
         input[type="text"],
         select {
             width: 100%;
@@ -32,45 +33,66 @@
             padding: 12px 20px;
             font-size: 1rem;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <h1>Pølseadmin</h1>
 
-<label>
-    <input type="checkbox" id="polsefest">
-    Pølsefest
-</label>
+<div id="login">
+    <p>Logg inn for å endre pølsestatus.</p>
 
-<label>
-    Sted
-    <select id="stedVelger" onchange="visAnnetFelt()">
-        <option value="Narvesen">Narvesen</option>
-        <option value="7-Eleven">7-Eleven</option>
-        <option value="Deli de Luca">Deli de Luca</option>
-        <option value="Annet">Annet</option>
-    </select>
-</label>
+    <label>
+        E-post
+        <input type="email" id="email" placeholder="din@epost.no">
+    </label>
 
-<label id="annetStedLabel" style="display: none;">
-    Annet sted
-    <input type="text" id="annetSted">
-</label>
+    <button onclick="sendLogin()">Send innloggingslenke</button>
 
-<label>
-    Pris
-    <input type="text" id="pris">
-</label>
+    <p id="loginStatus"></p>
+</div>
 
-<label>
-    Melding
-    <input type="text" id="melding">
-</label>
+<div id="admin" class="hidden">
+    <button onclick="loggUt()">Logg ut</button>
 
-<button onclick="lagre()">Lagre</button>
+    <label>
+        <input type="checkbox" id="polsefest">
+        Pølsefest
+    </label>
 
-<p id="status"></p>
+    <label>
+        Sted
+        <select id="stedVelger" onchange="visAnnetFelt()">
+            <option value="Narvesen">Narvesen</option>
+            <option value="7-Eleven">7-Eleven</option>
+            <option value="Deli de Luca">Deli de Luca</option>
+            <option value="Annet">Annet</option>
+        </select>
+    </label>
+
+    <label id="annetStedLabel" style="display: none;">
+        Annet sted
+        <input type="text" id="annetSted">
+    </label>
+
+    <label>
+        Pris
+        <input type="text" id="pris">
+    </label>
+
+    <label>
+        Melding
+        <input type="text" id="melding">
+    </label>
+
+    <button onclick="lagre()">Lagre</button>
+
+    <p id="status"></p>
+</div>
 
 <script>
 const SUPABASE_URL =
@@ -81,6 +103,42 @@ const SUPABASE_KEY =
 
 const supabaseClient =
     supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function sendLogin() {
+    const email =
+        document.getElementById("email").value;
+
+    const { error } = await supabaseClient.auth.signInWithOtp({
+        email: email,
+        options: {
+            emailRedirectTo: window.location.href
+        }
+    });
+
+    document.getElementById("loginStatus").innerText =
+        error
+            ? "Klarte ikke å sende innloggingslenke."
+            : "Sjekk e-posten din for innloggingslenke.";
+}
+
+async function sjekkInnlogging() {
+    const { data } =
+        await supabaseClient.auth.getSession();
+
+    if (data.session) {
+        document.getElementById("login").classList.add("hidden");
+        document.getElementById("admin").classList.remove("hidden");
+        await lastInn();
+    } else {
+        document.getElementById("login").classList.remove("hidden");
+        document.getElementById("admin").classList.add("hidden");
+    }
+}
+
+async function loggUt() {
+    await supabaseClient.auth.signOut();
+    location.reload();
+}
 
 function visAnnetFelt() {
     const valgtSted =
@@ -110,17 +168,11 @@ async function lastInn() {
         ["Narvesen", "7-Eleven", "Deli de Luca"];
 
     if (kjenteSteder.includes(data.sted)) {
-        document.getElementById("stedVelger").value =
-            data.sted;
-
-        document.getElementById("annetSted").value =
-            "";
+        document.getElementById("stedVelger").value = data.sted;
+        document.getElementById("annetSted").value = "";
     } else {
-        document.getElementById("stedVelger").value =
-            "Annet";
-
-        document.getElementById("annetSted").value =
-            data.sted || "";
+        document.getElementById("stedVelger").value = "Annet";
+        document.getElementById("annetSted").value = data.sted || "";
     }
 
     visAnnetFelt();
@@ -162,7 +214,7 @@ async function lagre() {
         error ? "Feil ved lagring." : "Lagret!";
 }
 
-lastInn();
+sjekkInnlogging();
 </script>
 
 </body>
