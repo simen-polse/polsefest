@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>Pølseadmin</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Pølseadmin</h1>
+
+<label>
+    <input type="checkbox" id="polsefest">
+    Pølsefest
+</label>
+
+<label>
+    Sted
+    <select id="stedVelger" onchange="visAnnetFelt()">
+        <option value="Narvesen">Narvesen</option>
+        <option value="7-Eleven">7-Eleven</option>
+        <option value="Deli de Luca">Deli de Luca</option>
+        <option value="Annet">Annet</option>
+    </select>
+</label>
+
+<label id="annetStedLabel" style="display: none;">
+    Annet sted
+    <input type="text" id="annetSted">
+</label>
+
+<label>
+    Pris
+    <input type="text" id="pris">
+</label>
+
+<label>
+    Melding
+    <input type="text" id="melding">
+</label>
+
+<button onclick="lagre()">Lagre</button>
+
+<p id="status"></p>
+
+<script>
+const SUPABASE_URL =
+    "https://ntwzzmnmbouclsoximwq.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_UZlebM4VdEBacdWpJAcbBg_6gb6vm2l";
+
+const supabaseClient =
+    supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+function visAnnetFelt() {
+    const valgtSted =
+        document.getElementById("stedVelger").value;
+
+    document.getElementById("annetStedLabel").style.display =
+        valgtSted === "Annet" ? "block" : "none";
+}
+
+async function lastInn() {
+    const { data, error } = await supabaseClient
+        .from("status")
+        .select("*")
+        .limit(1)
+        .single();
+
+    if (error) {
+        document.getElementById("status").innerText =
+            "Klarte ikke å hente status.";
+        return;
+    }
+
+    document.getElementById("polsefest").checked =
+        data.polsefest;
+
+    const kjenteSteder =
+        ["Narvesen", "7-Eleven", "Deli de Luca"];
+
+    if (kjenteSteder.includes(data.sted)) {
+        document.getElementById("stedVelger").value =
+            data.sted;
+
+        document.getElementById("annetSted").value =
+            "";
+    } else {
+        document.getElementById("stedVelger").value =
+            "Annet";
+
+        document.getElementById("annetSted").value =
+            data.sted || "";
+    }
+
+    visAnnetFelt();
+
+    document.getElementById("pris").value =
+        data.pris || "";
+
+    document.getElementById("melding").value =
+        data.melding || "";
+}
+
+async function lagre() {
+    const valgtSted =
+        document.getElementById("stedVelger").value;
+
+    const sted =
+        valgtSted === "Annet"
+            ? document.getElementById("annetSted").value
+            : valgtSted;
+
+    const { error } = await supabaseClient
+        .from("status")
+        .update({
+            polsefest:
+                document.getElementById("polsefest").checked,
+
+            sted:
+                sted,
+
+            pris:
+                document.getElementById("pris").value,
+
+            melding:
+                document.getElementById("melding").value
+        })
+        .eq("id", 1);
+
+    document.getElementById("status").innerText =
+        error ? "Feil ved lagring." : "Lagret!";
+}
+
+lastInn();
+</script>
+
+</body>
+</html>
