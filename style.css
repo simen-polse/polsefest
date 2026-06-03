@@ -40,3 +40,12 @@ p {
     margin: 0;
     max-width: 90vw;
 }
+#oppdatert {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+
+    font-size: 0.35em;
+    opacity: 0.7;
+}

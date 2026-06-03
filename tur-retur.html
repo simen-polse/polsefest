@@ -228,18 +228,21 @@ async function lagre() {
     const { error } = await supabaseClient
         .from("status")
         .update({
-            polsefest:
-                document.getElementById("polsefest").checked,
+    polsefest:
+        document.getElementById("polsefest").checked,
 
-            sted:
-                sted,
+    sted:
+        sted,
 
-            pris:
-                document.getElementById("pris").value,
+    pris:
+        document.getElementById("pris").value,
 
-            melding:
-                document.getElementById("melding").value
-        })
+    melding:
+        document.getElementById("melding").value,
+
+    oppdatert:
+        new Date().toISOString()
+})
         .eq("id", 1);
 
     document.getElementById("status").innerText =
