@@ -116,10 +116,9 @@ async function sendLogin() {
     });
 
     document.getElementById("loginStatus").innerText =
-        error
-            ? "Klarte ikke å sende innloggingslenke."
-            : "Sjekk e-posten din for innloggingslenke.";
-}
+    error
+        ? "Klarte ikke å sende innloggingslenke: " + error.message
+        : "Sjekk e-posten din for innloggingslenke.";
 
 async function sjekkInnlogging() {
     const { data } =
