@@ -40,21 +40,37 @@ function visStatus(status) {
         document.getElementById("info").innerText =
             status.melding || "Dessverre, ingen pølsefest akkurat nå.";
     }
-    if (status.oppdatert) {
-
+   if (status.oppdatert) {
     const dato = new Date(status.oppdatert);
 
-    const formatert =
-        dato.toLocaleString("nb-NO", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit"
-        });
+    // Formater tidspunktet statusen ble bekreftet
+    const bekreftetDato = dato.toLocaleDateString("nb-NO", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+    });
+
+    const bekreftetTid = dato.toLocaleTimeString("nb-NO", {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
+    // Finn søndag i samme uke
+    const gyldigTil = new Date(dato);
+
+    const ukedag = gyldigTil.getDay(); // 0 = søndag
+    const dagerTilSondag = ukedag === 0 ? 0 : 7 - ukedag;
+
+    gyldigTil.setDate(gyldigTil.getDate() + dagerTilSondag);
+
+    const gyldigTilDato = gyldigTil.toLocaleDateString("nb-NO", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+    });
 
     document.getElementById("oppdatert").innerText =
-        `Pølsestatus sist bekreftet ${formatert}`;
+        `Pølsestatus sist bekreftet ${bekreftetDato} kl. ${bekreftetTid}. Forventes gyldig til og med ${gyldigTilDato} kl. 23:59.`;
 }
 }
 
