@@ -158,7 +158,7 @@ function lagPolse() {
 
 
     polse.style.fontSize =
-        (1.5 + Math.random() * 1.5) +
+        (2.5 + Math.random() * 1.5) +
         "rem";
 
 
