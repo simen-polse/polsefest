@@ -1,23 +1,21 @@
-html, body {
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-}
-
 body {
     font-family: "Fredoka", sans-serif;
-    color: white;
     text-align: center;
+    color: white;
+
+    margin: 0;
+    padding: 0;
+
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    min-height: 100vh;
-    box-sizing: border-box;
-
-    transform: translateY(-6vh);
+    font-size: 2.5em;
 }
 
 .gronn {
@@ -29,34 +27,84 @@ body {
 }
 
 h1 {
-    font-size: clamp(8rem, 22vw, 18rem);
+    font-size: 6.3em;
     margin: 0 0 0.15em 0;
     letter-spacing: 3px;
-    line-height: 0.9;
+    line-height: 1;
 }
 
-p {
-    font-size: clamp(1.5rem, 4vw, 4rem);
+#info {
     margin: 0;
-    max-width: 90vw;
 }
+
 #oppdatert {
     position: fixed;
     bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
 
+    width: 95%;
+
     font-size: 0.8em;
     opacity: 0.65;
 
     white-space: nowrap;
+    text-align: center;
+
+    z-index: 20;
 }
 
+/* PØLSEREGN */
+
+.polse {
+    position: fixed;
+    top: -80px;
+
+    z-index: 10;
+
+    pointer-events: none;
+    user-select: none;
+
+    animation-name: polseregn;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+@keyframes polseregn {
+    from {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    to {
+        transform: translateY(115vh) rotate(360deg);
+    }
+}
+
+/* MOBIL */
+
 @media (max-width: 600px) {
+
+    body {
+        font-size: 1.5em;
+        padding-left: 15px;
+        padding-right: 15px;
+        box-sizing: border-box;
+    }
+
+    h1 {
+        font-size: 5em;
+    }
+
+    #info {
+        line-height: 1.25;
+    }
+
     #oppdatert {
         font-size: 0.9em;
         bottom: 20px;
+
         width: 90%;
+
         white-space: normal;
         line-height: 1.3;
     }
