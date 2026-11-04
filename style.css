@@ -52,7 +52,9 @@ h1 {
     top: 73%;
     left: 50%;
     transform: translateX(-50%);
+
     width: 95%;
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -89,15 +91,25 @@ h1 {
     opacity: 0.85;
 }
 
-/* PØLSESTATUS SIST BEKREFTET */
+/* BUNNTEKST */
 
-#oppdatert {
+#bunntekst {
     position: fixed;
-    bottom: 20px;
+    bottom: 12px;
     left: 50%;
     transform: translateX(-50%);
 
     width: 95%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    z-index: 20;
+}
+
+#oppdatert {
     margin: 0;
 
     font-size: 0.45em;
@@ -105,8 +117,22 @@ h1 {
 
     white-space: nowrap;
     text-align: center;
+}
 
-    z-index: 20;
+#personvernLenke {
+    color: white;
+
+    font-size: 0.32em;
+    opacity: 0.55;
+
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    text-align: center;
+}
+
+#personvernLenke:hover {
+    opacity: 1;
 }
 
 /* PØLSEREGN */
@@ -116,6 +142,7 @@ h1 {
     top: -80px;
 
     z-index: 10;
+
     pointer-events: none;
     user-select: none;
 
@@ -137,6 +164,7 @@ h1 {
 /* MOBIL */
 
 @media (max-width: 600px) {
+
     body {
         font-size: 1.5em;
         padding-left: 15px;
@@ -165,11 +193,20 @@ h1 {
         font-size: 0.7em;
     }
 
+    #bunntekst {
+        bottom: 12px;
+        width: 90%;
+        gap: 10px;
+    }
+
     #oppdatert {
         font-size: 0.7em;
-        bottom: 15px;
-        width: 90%;
         white-space: normal;
         line-height: 1.25;
+    }
+
+    #personvernLenke {
+        font-size: 0.5em;
+        line-height: 1.3;
     }
 }

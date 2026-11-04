@@ -8,19 +8,25 @@
 
     <title>Er det pølsefest?</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap"
-          rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
 
     <h1 id="status"></h1>
+
     <p id="info"></p>
 
+    <!-- MELD PØLSEFEST-BEHOV -->
+
     <div id="behovSeksjon" class="hidden">
+
         <button id="behovKnapp" type="button">
             Meld pølsefest-behov
         </button>
@@ -28,10 +34,22 @@
         <p id="behovTeller" aria-live="polite">
             Behov meldt i dag: ...
         </p>
+
     </div>
 
-    <p id="oppdatert"></p>
+    <!-- BUNNTEKST -->
+
+    <footer id="bunntekst">
+
+        <p id="oppdatert"></p>
+
+        <a id="personvernLenke" href="personvern.html">
+            Personvern på siden som sier om det er Pølsefest
+        </a>
+
+    </footer>
 
     <script src="script.js"></script>
+
 </body>
 </html>
