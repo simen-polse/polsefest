@@ -34,7 +34,7 @@ function hentBesokendeId() {
     return id;
 }
 
-function harMeldtI dag() {
+function harMeldtIdag() {
     return localStorage.getItem("polsefest_sist_meldt")
         === norskDato();
 }
@@ -42,7 +42,7 @@ function harMeldtI dag() {
 function oppdaterKnapp() {
     const knapp = document.getElementById("behovKnapp");
 
-    if (harMeldtI dag()) {
+    if (harMeldtIdag()) {
         knapp.disabled = true;
         knapp.innerText = "Behov meldt!";
     } else {
@@ -70,7 +70,7 @@ async function hentBehov() {
 async function meldBehov() {
     const knapp = document.getElementById("behovKnapp");
 
-    if (harMeldtI dag() || knapp.disabled) {
+    if (harMeldtIdag() || knapp.disabled) {
         return;
     }
 
