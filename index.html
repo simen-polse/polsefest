@@ -1,20 +1,37 @@
+
 <!DOCTYPE html>
 <html lang="no">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Er det pølsefest?</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
     <h1 id="status"></h1>
-<p id="info"></p>
-<p id="oppdatert"></p>
+    <p id="info"></p>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <div id="behovSeksjon" class="hidden">
+        <button id="behovKnapp" type="button">
+            Meld pølsefest-behov
+        </button>
+
+        <p id="behovTeller" aria-live="polite">
+            Behov meldt i dag: ...
+        </p>
+    </div>
+
+    <p id="oppdatert"></p>
+
     <script src="script.js"></script>
 </body>
 </html>
-
